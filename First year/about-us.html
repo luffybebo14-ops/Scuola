@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="icon.png">
+    <title>About us</title>
+</head>
+
+<style>
+    /* Background layer */
+    #background {
+        position: fixed;       /* stays in place */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+        /* background: url("ponti_treviso.png") no-repeat center center fixed; */
+        background-size: cover;
+        z-index: -1;           /* behind everything */
+    }
+
+    /* Foreground layer */
+    .foreground {
+        background-color: #f9f9fc;
+        border-top-left-radius: 30px;   /* rounded top edges */
+        border-top-right-radius: 30px;
+        border-radius: 30px;
+        padding: 40px 20px;
+        max-width: 900px;
+        height: auto;
+        margin: 0 auto;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2); /* optional depth */
+    }
+    
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      color: #1a1a3d;
+    }
+
+    h3 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 20px;
+      color: #000000;
+    }
+
+    #div_pre{
+        width: 100%;
+    }
+
+    pre {
+        white-space: pre-wrap;       /* Allows text to wrap when it hits the edge */
+        word-wrap: break-word;       /* Ensures very long words don't overflow */
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, Arial, sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0;
+    }
+    img{
+        height: auto;
+        max-width: 100%;
+    }
+</style>
+
+<body>
+    <div id="background"></div>
+
+    <div class="foreground">
+
+        <h3>ABOUT US</h3>
+        <br>
+
+        <div id="div_pre">
+            <pre>   Questo sito nasce dal lavoro e dalla collaborazione degli studenti della nostra sezione, con l’obiettivo di raccogliere e presentare in modo chiaro e immediato i progetti realizzati nel corso dei cinque anni di studi da vari gruppi e collaborazioni della nostra classe.
+
+    Abbiamo sviluppato la piattaforma da zero, costruendo uno spazio che potesse mostrare al meglio ciò che abbiamo creato: siti web, modelli 3D, e-book e vari altri lavori che rappresentano la nostra esperienza, sia scolastica che tecnica.
+
+    L’idea è quella di offrire non solo un archivio completo, ma anche una panoramica del percorso che ci ha accompagnati in questi anni, per lasciarlo ai posteri a scopo di dimostrare come la scuola sia capace di animare i giovani a sfidare loro stessi per collegare interdisciplinarmente le materie accrescendo, o anche scoprendo, parallelamente le competenze che li appassionano.
+
+    Per noi questo sito è un modo per raccontare chi siamo e come siamo arrivati fin qui, un punto d'arrivo che allo stesso tempo apre la strada ai progetti futuri.
+
+
+    Classe 2AA,
+    Liceo scientifico delle Scienze Applicate,“Duca degli Abruzzi” - Treviso</pre>
+            
+    </div>
+        <br>
+        <br>
+        <a href="foto_prima.jpg" target="_blank" rel="noopener noreferrer">
+            <img title="foto_class" src="foto_prima.jpg" alt="foto_class">
+        </a>
+
+        <a href="first_year.html">
+            <button>Back</button>
+        </a>
+
+    </div>
+
+</body>
+</html>

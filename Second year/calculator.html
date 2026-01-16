@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatrice arco</title>
+    <link rel="icon" type="image/x-icon" href="photos\icon.png">
+    <!-- <link rel="stylesheet" href="calculator_style.css"> -->
+    <style>
+        /* Background layer */
+        #background {
+            position: fixed;       
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            background-size: cover;
+            z-index: -1;           
+        }
+
+        /* Foreground layer */
+        .foreground {
+            background-color: #f9f9fc;
+            border-top-left-radius: 30px;  
+            border-top-right-radius: 30px;
+            border-radius: 30px;
+            padding: 40px 20px;
+            max-width: 900px;
+            height: auto;
+            margin: 0 auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2); 
+        }
+        
+        
+        #black_box { 
+            min-height: 200px; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            background-color: #000000; 
+            font-family: monospace; 
+            color: green; 
+        }
+        #black_box input, #black_box button { 
+            margin: 5px 0; 
+            padding: 5px; 
+            font-size: 14px; 
+            background-color: #fff;
+            color: #000;
+        }
+        #black_box input::placeholder { 
+            color: #666; 
+        }
+        #black_box #message { 
+            color: red; 
+            margin: 10px 0; 
+            font-weight: bold; 
+        }
+        #black_box #result { 
+            font-weight: bold; 
+            color: green; 
+            margin: 20px 0; 
+            padding: 10px;  
+            background-color: #000000; 
+        }
+        .hidden { display: none; }
+        #pre1 { 
+            font-style: italic;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, Arial, sans-serif;
+            font-size: 16px; 
+            margin: 10px 0; 
+            color: #000; 
+            font-weight: bold; 
+        }
+        #b2, .restart-btn { 
+            font-size: 16px; 
+            padding: 10px 20px; 
+        }
+        #initial-msg { 
+            color: green; 
+        }
+        #img {
+            max-width: 100%;
+            height: 300px;
+            display: block;
+            margin: 0 auto; 
+            object-fit: contain; 
+            transition: height 0.5s ease-in-out;
+        }
+        h3{
+            font-weight: 700;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, Arial, sans-serif;
+            text-align: center;
+            margin-left: 33%;
+            margin-right: 33%;        
+            margin-bottom: 40px;
+            font-size: 20px;
+            color: #000000;
+        }
+        #body1{
+            background-color: white;
+        }
+        #body2{
+            background-color: black;
+            margin-left: 33%;
+            margin-right: 33%;
+            margin-bottom: auto;
+            margin-top: auto;
+        }
+        .b1{
+            border-radius: 20%;
+            font-size: large;
+        }
+        #button1{
+            text-align: center;
+            display: flex; 
+            justify-content: center; 
+            gap: 10px;
+        }
+        #pre1{
+            text-align: center;
+            margin-left: 33%;
+            margin-right: 33%;
+            font-size: large;
+        }
+        #b2{
+            font-size: large;
+            margin-left: 33%;
+            margin-right: 33%;    
+        }
+        #button2{
+            text-align: center;
+        }
+        #black_box{
+            width: auto;
+            height: 200px; 
+            background-color: black; 
+            color: green;
+            text-align: left;
+            margin-left: 33%;
+            margin-right: 33%;
+        }
+        #pre2{
+            font-size: large;
+        }
+        a{
+            color: rgb(0, 0, 0);
+            text-decoration: none;
+        }
+        a:hover{
+            color: rgb(255, 0, 183);
+        }
+    </style>
+</head>
+<body id="body1">
+
+    <div id="background"></div>
+
+    <div class="foreground">
+        <h3>ARCO A TUTTO SESTO</h3>
+        <div id="button1">
+            <button class="b1" onclick="startCalculator()">START</button>
+            <button class="b1" onclick="quitApp()">QUIT</button>
+        </div>
+        <br>
+        <div id="black_box">
+            <!-- Calculator content will be dynamically inserted here on START -->
+            <p id="initial-msg" style="text-align: center; color: green;">Clicca START per iniziare il calcolo.</p>
+        </div>
+        <pre id="pre1">l = X m      dp = X m</pre> 
+
+        <div id="button2">
+            <button id="b2" onclick="confirmResult()" class="hidden">Confirm?</button>
+        </div>
+        <br>
+        
+        <img src="photos\arc_evee_nobg.jpg" alt="Styled image" id="img">
+        <br>
+
+        <a href="second_year.html">
+            <button>Back</button>
+        </a>
+    </div>
+
+    <script>
+        let currentStep = 'step1'; // Track current step: 'step1', 'step2', 'result', 'confirmed'
+        let calculationData = {}; // Store input data for result display
+
+        function startCalculator() {
+            const blackBox = document.getElementById('black_box');
+            blackBox.innerHTML = `
+                <div id="step1">
+                    <label for="choice">Inserisci l/dp: </label><br>
+                    <input type="text" id="choice" placeholder="es. l o dp"><br>
+                    <button onclick="proceed()">Procedi</button>
+                </div>
+                <div id="message"></div>
+                <div id="step2" class="hidden"></div>
+                <div id="result" class="hidden"></div>
+            `;
+            currentStep = 'step1';
+            document.getElementById('choice').focus();
+            resetPre1(); // Reset to initial X values
+            document.getElementById('b2').classList.add('hidden');
+            const img = document.getElementById('img');
+            img.style.height = '300px'; // Reset to default 300px height
+            // Image remains visible at default size during calculation
+            // Remove initial message
+            const initialMsg = document.getElementById('initial-msg');
+            if (initialMsg) initialMsg.remove();
+        }
+
+        function resetPre1() {
+            const pre1 = document.getElementById('pre1');
+            pre1.textContent = 'l = X m      dp = X m';
+        }
+
+        function showMessage(text, isError = false) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = text;
+            msgDiv.style.color = isError ? 'red' : 'black';
+            if (!isError) {
+                setTimeout(() => { msgDiv.textContent = ''; }, 3000);
+            }
+        }
+
+        function clearMessageOnInput() {
+            const msgDiv = document.getElementById('message');
+            if (msgDiv.textContent) {
+                msgDiv.textContent = ''; // Clear error message when typing in any input
+            }
+        }
+
+        function validateUnit(b) {
+            const unit = b.toLowerCase().trim();
+            if (unit !== 'm' && unit !== 'cm') {
+                showMessage('Unità deve essere "m" o "cm"', true);
+                return false;
+            }
+            return true;
+        }
+
+        function proceed() {
+            const x = document.getElementById('choice').value.trim();
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const msg = document.getElementById('message');
+
+            msg.textContent = ''; // Clear previous message
+
+            if (x === 'l') {
+                calculationData.choice = 'l';
+                step1.classList.add('hidden');
+                step2.innerHTML = `
+                    <label for="dp">Inserisci dp: </label><br>
+                    <input type="number" id="dp" placeholder="es. 10" oninput="clearMessageOnInput()"><br><br>
+                    
+                    <label for="unit">Inserisci m/cm: </label><br>
+                    <input type="text" id="unit" placeholder="es. m o cm" oninput="clearMessageOnInput()"><br><br>
+                    
+                    <button onclick="calculateL()" id="calcolaBtn">Calcola</button>
+                    <button onclick="goBack()">Indietro</button>
+                `;
+                step2.classList.remove('hidden');
+                currentStep = 'step2';
+                document.getElementById('dp').focus();
+            } else if (x === 'dp') {
+                calculationData.choice = 'dp';
+                step1.classList.add('hidden');
+                step2.innerHTML = `
+                    <label for="lValue">Inserisci l: </label><br>
+                    <input type="number" id="lValue" placeholder="es. 20" oninput="clearMessageOnInput()"><br><br>
+                    
+                    <label for="unit">Inserisci m/cm: </label><br>
+                    <input type="text" id="unit" placeholder="es. m o cm" oninput="clearMessageOnInput()"><br><br>
+                    
+                    <button onclick="calculateDP()" id="calcolaBtn">Calcola</button>
+                    <button onclick="goBack()">Indietro</button>
+                `;
+                step2.classList.remove('hidden');
+                currentStep = 'step2';
+                document.getElementById('lValue').focus();
+            } else {
+                showMessage('Input non valido, riprova', true);
+                document.getElementById('choice').value = ''; // Clear input
+                document.getElementById('choice').focus();
+            }
+        }
+
+        function goBack() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+            currentStep = 'step1';
+            document.getElementById('choice').focus();
+        }
+
+        function calculateL() {
+            const aInput = document.getElementById('dp').value;
+            const a = parseInt(aInput);
+            const b = document.getElementById('unit').value;
+
+            if (isNaN(a)) {
+                showMessage('Inserisci un valore numerico valido per dp', true);
+                return;
+            }
+            if (!b.trim()) {
+                showMessage('Inserisci l\'unità (m o cm)', true);
+                return;
+            }
+            if (!validateUnit(b)) {
+                return;
+            }
+
+            const lValue = parseInt(a * 2); // c in original
+            calculationData.l = lValue;
+            calculationData.dp = a;
+            calculationData.unit = b.trim();
+
+            const step2 = document.getElementById('step2');
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<p>La l è di ${lValue} ${calculationData.unit}</p>`;
+            resultDiv.classList.remove('hidden');
+            step2.classList.add('hidden');
+            currentStep = 'result';
+
+            updatePre1(); // Update l and dp display immediately
+            document.getElementById('b2').classList.remove('hidden');
+            document.getElementById('b2').focus(); // Focus on confirm button for Enter key
+        }
+
+        function calculateDP() {
+            const zInput = document.getElementById('lValue').value;
+            const z = parseInt(zInput);
+            const b = document.getElementById('unit').value;
+
+            if (isNaN(z)) {
+                showMessage('Inserisci un valore numerico valido per l', true);
+                return;
+            }
+            if (!b.trim()) {
+                showMessage('Inserisci l\'unità (m o cm)', true);
+                return;
+            }
+            if (!validateUnit(b)) {
+                return;
+            }
+
+            const dpValue = parseInt(z / 2); // w in original
+            calculationData.l = z;
+            calculationData.dp = dpValue;
+            calculationData.unit = b.trim();
+
+            const step2 = document.getElementById('step2');
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<p>La dp è di ${dpValue} ${calculationData.unit}</p>`;
+            resultDiv.classList.remove('hidden');
+            step2.classList.add('hidden');
+            currentStep = 'result';
+
+            updatePre1(); // Update l and dp display immediately
+            document.getElementById('b2').classList.remove('hidden');
+            document.getElementById('b2').focus(); // Focus on confirm button for Enter key
+        }
+
+        function updatePre1() {
+            const pre1 = document.getElementById('pre1');
+            const unit = calculationData.unit || 'm';
+            pre1.textContent = `l = ${calculationData.l} ${unit}      dp = ${calculationData.dp} ${unit}`;
+            pre1.style.color = '#000000'; // Optional: Highlight updated values in blue for visibility
+        }
+
+        function confirmResult() {
+            if (currentStep !== 'result') return;
+            if (confirm('Confermi i risultati?')) {
+                document.getElementById('result').classList.add('hidden');
+                document.getElementById('black_box').innerHTML = `
+                    <p style="text-align: center; color: green; font-weight: bold;">
+                        Calcolo confermato! l = ${calculationData.l} ${calculationData.unit}, dp = ${calculationData.dp} ${calculationData.unit}
+                    </p>
+                    <button onclick="restart()" class="restart-btn" id="restartBtn">Ricomincia</button>
+                `;
+                const img = document.getElementById('img');
+                // Scaled version: exactly l * 50 px, no cap or min
+                const scaleHeight = calculationData.l * 50; // e.g., l=1 -> 50px, l=2 -> 100px, l=3 -> 150px, etc.
+                img.style.height = `${scaleHeight}px`;
+                img.style.width = 'auto'; // Maintain aspect ratio
+                currentStep = 'confirmed';
+                document.getElementById('restartBtn').focus(); // Focus on restart button for Enter key
+                // Keep the updated #pre1 visible
+            }
+        }
+
+        function restart() {
+            startCalculator();
+        }
+
+        function quitApp() {
+            if (confirm('Sei sicuro di voler uscire?')) {
+                window.close(); // Attempts to close the window; may not work in all browsers
+            }
+        }
+
+        // Allow Enter key to proceed in all steps with improved flow for step2
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (currentStep === 'step1') {
+                    proceed();
+                } else if (currentStep === 'step2') {
+                    const activeElement = document.activeElement;
+                    const numberInput = calculationData.choice === 'l' ? document.getElementById('dp') : document.getElementById('lValue');
+                    const unitInput = document.getElementById('unit');
+
+                    if (activeElement === numberInput || document.activeElement.tagName !== 'INPUT') {
+                        // If focused on number input (or nowhere), focus to unit input
+                        unitInput.focus();
+                        clearMessageOnInput(); // Clear any error when moving to unit
+                        e.preventDefault(); // Prevent default Enter behavior
+                    } else if (activeElement === unitInput) {
+                        // If focused on unit input, trigger calculate
+                        if (calculationData.choice === 'l') {
+                            calculateL();
+                        } else if (calculationData.choice === 'dp') {
+                            calculateDP();
+                        }
+                    }
+                } else if (currentStep === 'result') {
+                    // Trigger confirm when in result step
+                    confirmResult();
+                } else if (currentStep === 'confirmed') {
+                    // Trigger restart when in confirmed step
+                    restart();
+                }
+            }
+        });
+
+        // Additional focus management for better keyboard flow
+        document.addEventListener('focus', function(e) {
+            if (currentStep === 'step2') {
+                setTimeout(() => {
+                    const calcolaBtn = document.getElementById('calcolaBtn');
+                    if (calcolaBtn && document.activeElement !== calcolaBtn) {
+                        // Optional: Auto-focus on Calcola after unit, but let user tab naturally
+                    }
+                }, 100);
+            }
+        });
+
+        // Initial state: Set default height, no hidden class needed since it's always visible
+        document.getElementById('b2').classList.add('hidden');
+    </script>
+</body>
+</html>
